@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ request.url_for('static', path='css/styles.css') }}">
+    <title>My Project</title>
+</head>
+<body>
+    <nav>
+        <button class="hamburger" onclick="toggleSidebar()">☰</button>
+        <span id="page-title">{{ page_title }}</span>
+    </nav>
+    <div class="main-container">
+        <div class="sidebar">
+            <a href="{{ request.url_for('read_root') }}">Home</a>
+            {% for tool_name, tool_link in sidebar_items.items() %}
+                <a href="{{ request.url_for(tool_link) }}" onclick="setActiveLink(this)">{{ tool_name }}</a>
+            {% endfor %}
+        </div>
+        <div class="content">
+            {% block content %}{% endblock %}
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- Include Chart.js -->
+    <script src="{{ request.url_for('static', path='js/script.js') }}"></script>
+    <script src="{{ request.url_for('static', path='js/chart.js') }}"></script>
+    <script src="{{ request.url_for('static', path='js/table.js') }}"></script>
+    <script>
+    function toggleSidebar() {
+        const sidebar = document.querySelector('.sidebar');
+        const content = document.querySelector('.content');
+        const hamburger = document.querySelector('.hamburger');
+        sidebar.classList.toggle('collapsed');
+        content.classList.toggle('expanded');
+        hamburger.classList.toggle('rotated');
+    }
+    function setActiveLink(element) {
+        console.log('Cliecked');
+        const links = document.querySelectorAll('.sidebar a');
+        links.forEach(link => {
+            link.classList.remove('active');
+        });
+        console.log(element);
+        element.classList.add('active');
+    }
+    document.addEventListener('DOMContentLoaded', () => {
+        const path = window.location.pathname;
+        const links = document.querySelectorAll('.sidebar a');
+        links.forEach(link => {
+            if (link.getAttribute('href') === path) {
+                console.log(link);
+                console.log(path);
+                link.classList.add('active');
+            }
+        });
+    });
+    </script>
+</body>
+</html>
